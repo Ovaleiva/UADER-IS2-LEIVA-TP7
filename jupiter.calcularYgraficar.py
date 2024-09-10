@@ -1,49 +1,33 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Constantes del modelo (valores típicos para proyectos orgánicos en COCOMO)
-a = 2.4  # Constante para calcular el esfuerzo
-b = 1.05 # Exponente para el esfuerzo
-c = 2.5  # Constante para calcular el tiempo
-d = 0.38 # Exponente para el tiempo
+def calcular_esfuerzo(tamano):
+    return 8 * tamano**0.95
 
-# Función para calcular el esfuerzo basado en el tamaño
-def calcular_esfuerzo(S):
-    return a * S**b
+def calcular_tiempo_calendario(esfuerzo):
+    return 2 * 4 * esfuerzo**0.33
 
-# Función para calcular el tiempo basado en el esfuerzo
-def calcular_tiempo(E):
-    return c * E**d
+tamano_intervalo = np.linspace(0, 10000, 1000)
+esfuerzo = calcular_esfuerzo(tamano_intervalo)
 
-# Generar los datos para el tamaño del proyecto (S) y el esfuerzo (E)
-tamanos = np.linspace(0, 10000, 100)  # Tamaño del proyecto de 0 a 10000 KLOC
-esfuerzos = calcular_esfuerzo(tamanos)
+esfuerzo_intervalo = np.linspace(1, 500, 1000)
+tiempo_calendario = calcular_tiempo_calendario(esfuerzo_intervalo)
 
-# Generar los datos para el esfuerzo (E) y el tiempo (td)
-esfuerzos_intervalo = np.linspace(1, 500, 100)  # Esfuerzo de 1 a 500 persona-meses
-tiempos = calcular_tiempo(esfuerzos_intervalo)
+fig, axs = plt.subplots(2, 1, figsize=(10, 12))
 
-# Graficar esfuerzo (E) en función del tamaño (S)
-plt.figure(figsize=(12, 6))
+axs[0].plot(tamano_intervalo, esfuerzo, label='Esfuerzo (E)')
+axs[0].set_xlabel('Tamaño del proyecto (S)')
+axs[0].set_ylabel('Esfuerzo (E)')
+axs[0].set_title('Esfuerzo vs Tamaño del Proyecto')
+axs[0].legend()
+axs[0].grid(True)
 
-# Gráfico 1: Esfuerzo en función del tamaño del proyecto
-plt.subplot(1, 2, 1)
-plt.plot(tamanos, esfuerzos, label='Esfuerzo (E)', color='blue')
-plt.xlabel('Tamaño del proyecto (KLOC)')
-plt.ylabel('Esfuerzo (persona-meses)')
-plt.title('Esfuerzo en función del tamaño del proyecto')
-plt.grid(True)
-plt.legend()
+axs[1].plot(esfuerzo_intervalo, tiempo_calendario, label='Tiempo Calendario (td)', color='orange')
+axs[1].set_xlabel('Esfuerzo (E)')
+axs[1].set_ylabel('Tiempo Calendario (td)')
+axs[1].set_title('Tiempo Calendario vs Esfuerzo')
+axs[1].legend()
+axs[1].grid(True)
 
-# Gráfico 2: Tiempo en función del esfuerzo
-plt.subplot(1, 2, 2)
-plt.plot(esfuerzos_intervalo, tiempos, label='Tiempo (td)', color='green')
-plt.xlabel('Esfuerzo (persona-meses)')
-plt.ylabel('Tiempo (meses)')
-plt.title('Tiempo en función del esfuerzo')
-plt.grid(True)
-plt.legend()
-
-# Mostrar gráficos
 plt.tight_layout()
 plt.show()
